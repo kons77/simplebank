@@ -1,3 +1,36 @@
+# migrate pre-compiled binary
 migrate*
-migrate.exe
-migrate
+
+# Ignore environment files
+.env
+.env.*
+!.env.example
+
+
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Go workspace file (Go 1.18+)
+go.work
+go.work.sum
+
+# IDE / Editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db

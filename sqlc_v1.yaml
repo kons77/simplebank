@@ -1,0 +1,11 @@
+varsion: "1"
+packages:
+  - name: "db"
+    path: "/.db/sqlc/"
+    queries: "./db/queriy"
+    schema: "./db/migration"
+    engine: "postresql"
+    emit_json_tags: true
+    emit_prepared_queries: false
+    emit_interface: false
+    emit_exact_table_names: false

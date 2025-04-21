@@ -1,6 +1,6 @@
 -- https://docs.sqlc.dev/en/latest/tutorials/getting-started-postgresql.html#  
 
--- name: CreateEntrie :one
+-- name: CreateEntry :one
 INSERT INTO entries (
   account_id, 
   amount
@@ -8,27 +8,28 @@ INSERT INTO entries (
   $1, $2
 ) RETURNING *;
 
--- name: GetEntrie :one
+-- name: GetEntry :one
 SELECT * FROM entries
 WHERE id = $1 LIMIT 1;
 
 -- name: ListEntries :many
 SELECT * FROM entries
+WHERE account_id = $1
 ORDER BY id
-LIMIT $1 
-OFFSET $2;
+LIMIT $2 
+OFFSET $3;
 
 -- name: UpdateAEntrieNoReturn :exec
 UPDATE entries
 SET account_id =$2, amount = $3
 WHERE id = $1;
 
--- name: UpdateEntrie :one
+-- name: UpdateEntry :one
 UPDATE entries
 SET account_id =$2, amount = $3
 WHERE id = $1
 RETURNING *;
 
--- name: DeleteEntrie :exec
+-- name: DeleteEntry :exec
 DELETE FROM entries
 WHERE id = $1;
