@@ -11,11 +11,25 @@ import (
 type Querier interface {
 	// https://docs.sqlc.dev/en/latest/tutorials/getting-started-postgresql.html#
 	CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error)
+	// https://docs.sqlc.dev/en/latest/tutorials/getting-started-postgresql.html#
+	CreateEntrie(ctx context.Context, arg CreateEntrieParams) (Entry, error)
+	// https://docs.sqlc.dev/en/latest/tutorials/getting-started-postgresql.html#
+	CreateTrasfer(ctx context.Context, arg CreateTrasferParams) (Transfer, error)
 	DeleteAccount(ctx context.Context, id int64) error
+	DeleteEntrie(ctx context.Context, id int64) error
+	DeleteTrasfer(ctx context.Context, id int64) error
 	GetAccount(ctx context.Context, id int64) (Account, error)
+	GetEntrie(ctx context.Context, id int64) (Entry, error)
+	GetTrasfer(ctx context.Context, id int64) (Transfer, error)
 	ListAccounts(ctx context.Context, arg ListAccountsParams) ([]Account, error)
+	ListEntries(ctx context.Context, arg ListEntriesParams) ([]Entry, error)
+	ListTrasfers(ctx context.Context, arg ListTrasfersParams) ([]Transfer, error)
+	UpdateAEntrieNoReturn(ctx context.Context, arg UpdateAEntrieNoReturnParams) error
+	UpdateATrasferNoReturn(ctx context.Context, arg UpdateATrasferNoReturnParams) error
 	UpdateAccount(ctx context.Context, arg UpdateAccountParams) (Account, error)
 	UpdateAccountNoReturn(ctx context.Context, arg UpdateAccountNoReturnParams) error
+	UpdateEntrie(ctx context.Context, arg UpdateEntrieParams) (Entry, error)
+	UpdateTrasfer(ctx context.Context, arg UpdateTrasferParams) (Transfer, error)
 }
 
 var _ Querier = (*Queries)(nil)
