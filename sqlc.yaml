@@ -1,16 +1,18 @@
 version: "2"
 sql:
-- schema: "db/migration"
-  queries: "db/query"
-  engine: "postgresql"
-  gen:
+- schema: "db/migration" # folder contains all sql mifration files 
+  queries: "db/query" # folder contains all sql query files 
+  engine: "postgresql" 
+  gen: # tell sqlc how to generate code
     go: 
-      package: "db"
-      out: "db/sqlc"
+      package: "db" # name of db package 
+      out: "db/sqlc" # folder where we generate files 
       sql_package: "pgx/v5"
-      emit_json_tags: true
-      emit_interface: true
-      emit_empty_slices: true
+      emit_json_tags: true # we want to have json tags for the db model structs
+      # emit_prepared_queries # we don't use prepared queries 
+      emit_interface: true # use it for unit tests 
+      # emit_exact_table_names: false # wnat to use single form for table names
+      emit_empty_slices: true # slices returned by the query will be empty but not null
       overrides:
         - db_type: "timestamptz"
           go_type: "time.Time"
