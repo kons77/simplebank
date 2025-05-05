@@ -9,27 +9,29 @@ import (
 )
 
 type Querier interface {
+	AddAccountBalance(ctx context.Context, arg AddAccountBalanceParams) (Account, error)
 	// https://docs.sqlc.dev/en/latest/tutorials/getting-started-postgresql.html#
 	CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error)
 	// https://docs.sqlc.dev/en/latest/tutorials/getting-started-postgresql.html#
 	CreateEntry(ctx context.Context, arg CreateEntryParams) (Entry, error)
 	// https://docs.sqlc.dev/en/latest/tutorials/getting-started-postgresql.html#
-	CreateTrasfer(ctx context.Context, arg CreateTrasferParams) (Transfer, error)
+	CreateTransfer(ctx context.Context, arg CreateTransferParams) (Transfer, error)
 	DeleteAccount(ctx context.Context, id int64) error
 	DeleteEntry(ctx context.Context, id int64) error
-	DeleteTrasfer(ctx context.Context, id int64) error
+	DeleteTransfer(ctx context.Context, id int64) error
 	GetAccount(ctx context.Context, id int64) (Account, error)
+	GetAccountForUpdate(ctx context.Context, id int64) (Account, error)
 	GetEntry(ctx context.Context, id int64) (Entry, error)
-	GetTrasfer(ctx context.Context, id int64) (Transfer, error)
+	GetTransfer(ctx context.Context, id int64) (Transfer, error)
 	ListAccounts(ctx context.Context, arg ListAccountsParams) ([]Account, error)
 	ListEntries(ctx context.Context, arg ListEntriesParams) ([]Entry, error)
-	ListTrasfers(ctx context.Context, arg ListTrasfersParams) ([]Transfer, error)
+	ListTransfers(ctx context.Context, arg ListTransfersParams) ([]Transfer, error)
 	UpdateAEntrieNoReturn(ctx context.Context, arg UpdateAEntrieNoReturnParams) error
-	UpdateATrasferNoReturn(ctx context.Context, arg UpdateATrasferNoReturnParams) error
+	UpdateATransferNoReturn(ctx context.Context, arg UpdateATransferNoReturnParams) error
 	UpdateAccount(ctx context.Context, arg UpdateAccountParams) (Account, error)
 	UpdateAccountNoReturn(ctx context.Context, arg UpdateAccountNoReturnParams) error
 	UpdateEntry(ctx context.Context, arg UpdateEntryParams) (Entry, error)
-	UpdateTrasfer(ctx context.Context, arg UpdateTrasferParams) (Transfer, error)
+	UpdateTransfer(ctx context.Context, arg UpdateTransferParams) (Transfer, error)
 }
 
 var _ Querier = (*Queries)(nil)

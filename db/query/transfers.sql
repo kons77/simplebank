@@ -1,6 +1,6 @@
 -- https://docs.sqlc.dev/en/latest/tutorials/getting-started-postgresql.html#  
 
--- name: CreateTrasfer :one
+-- name: CreateTransfer :one
 INSERT INTO transfers (
   from_account_id, 
   to_account_id,
@@ -9,11 +9,11 @@ INSERT INTO transfers (
   $1, $2, $3
 ) RETURNING *;
 
--- name: GetTrasfer :one
+-- name: GetTransfer :one
 SELECT * FROM transfers
 WHERE id = $1 LIMIT 1;
 
--- name: ListTrasfers :many
+-- name: ListTransfers :many
 SELECT * FROM transfers
 WHERE 
     from_account_id = $1 OR
@@ -22,17 +22,17 @@ ORDER BY id
 LIMIT $3
 OFFSET $4;
 
--- name: UpdateATrasferNoReturn :exec
+-- name: UpdateATransferNoReturn :exec
 UPDATE transfers
 SET from_account_id =$2, to_account_id = $3, amount = $4
 WHERE id = $1;
 
--- name: UpdateTrasfer :one
+-- name: UpdateTransfer :one
 UPDATE transfers
 SET from_account_id =$2, to_account_id = $3, amount = $4
 WHERE id = $1
 RETURNING *;
 
--- name: DeleteTrasfer :exec
+-- name: DeleteTransfer :exec
 DELETE FROM transfers
 WHERE id = $1;

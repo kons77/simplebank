@@ -11,7 +11,7 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-const createTrasfer = `-- name: CreateTrasfer :one
+const createTransfer = `-- name: CreateTransfer :one
 
 INSERT INTO transfers (
   from_account_id, 
@@ -22,15 +22,15 @@ INSERT INTO transfers (
 ) RETURNING id, from_account_id, to_account_id, amount, created_at
 `
 
-type CreateTrasferParams struct {
+type CreateTransferParams struct {
 	FromAccountID pgtype.Int8 `json:"from_account_id"`
 	ToAccountID   pgtype.Int8 `json:"to_account_id"`
 	Amount        int64       `json:"amount"`
 }
 
 // https://docs.sqlc.dev/en/latest/tutorials/getting-started-postgresql.html#
-func (q *Queries) CreateTrasfer(ctx context.Context, arg CreateTrasferParams) (Transfer, error) {
-	row := q.db.QueryRow(ctx, createTrasfer, arg.FromAccountID, arg.ToAccountID, arg.Amount)
+func (q *Queries) CreateTransfer(ctx context.Context, arg CreateTransferParams) (Transfer, error) {
+	row := q.db.QueryRow(ctx, createTransfer, arg.FromAccountID, arg.ToAccountID, arg.Amount)
 	var i Transfer
 	err := row.Scan(
 		&i.ID,
@@ -42,23 +42,23 @@ func (q *Queries) CreateTrasfer(ctx context.Context, arg CreateTrasferParams) (T
 	return i, err
 }
 
-const deleteTrasfer = `-- name: DeleteTrasfer :exec
+const deleteTransfer = `-- name: DeleteTransfer :exec
 DELETE FROM transfers
 WHERE id = $1
 `
 
-func (q *Queries) DeleteTrasfer(ctx context.Context, id int64) error {
-	_, err := q.db.Exec(ctx, deleteTrasfer, id)
+func (q *Queries) DeleteTransfer(ctx context.Context, id int64) error {
+	_, err := q.db.Exec(ctx, deleteTransfer, id)
 	return err
 }
 
-const getTrasfer = `-- name: GetTrasfer :one
+const getTransfer = `-- name: GetTransfer :one
 SELECT id, from_account_id, to_account_id, amount, created_at FROM transfers
 WHERE id = $1 LIMIT 1
 `
 
-func (q *Queries) GetTrasfer(ctx context.Context, id int64) (Transfer, error) {
-	row := q.db.QueryRow(ctx, getTrasfer, id)
+func (q *Queries) GetTransfer(ctx context.Context, id int64) (Transfer, error) {
+	row := q.db.QueryRow(ctx, getTransfer, id)
 	var i Transfer
 	err := row.Scan(
 		&i.ID,
@@ -70,7 +70,7 @@ func (q *Queries) GetTrasfer(ctx context.Context, id int64) (Transfer, error) {
 	return i, err
 }
 
-const listTrasfers = `-- name: ListTrasfers :many
+const listTransfers = `-- name: ListTransfers :many
 SELECT id, from_account_id, to_account_id, amount, created_at FROM transfers
 WHERE 
     from_account_id = $1 OR
@@ -80,15 +80,15 @@ LIMIT $3
 OFFSET $4
 `
 
-type ListTrasfersParams struct {
+type ListTransfersParams struct {
 	FromAccountID pgtype.Int8 `json:"from_account_id"`
 	ToAccountID   pgtype.Int8 `json:"to_account_id"`
 	Limit         int32       `json:"limit"`
 	Offset        int32       `json:"offset"`
 }
 
-func (q *Queries) ListTrasfers(ctx context.Context, arg ListTrasfersParams) ([]Transfer, error) {
-	rows, err := q.db.Query(ctx, listTrasfers,
+func (q *Queries) ListTransfers(ctx context.Context, arg ListTransfersParams) ([]Transfer, error) {
+	rows, err := q.db.Query(ctx, listTransfers,
 		arg.FromAccountID,
 		arg.ToAccountID,
 		arg.Limit,
@@ -118,21 +118,21 @@ func (q *Queries) ListTrasfers(ctx context.Context, arg ListTrasfersParams) ([]T
 	return items, nil
 }
 
-const updateATrasferNoReturn = `-- name: UpdateATrasferNoReturn :exec
+const updateATransferNoReturn = `-- name: UpdateATransferNoReturn :exec
 UPDATE transfers
 SET from_account_id =$2, to_account_id = $3, amount = $4
 WHERE id = $1
 `
 
-type UpdateATrasferNoReturnParams struct {
+type UpdateATransferNoReturnParams struct {
 	ID            int64       `json:"id"`
 	FromAccountID pgtype.Int8 `json:"from_account_id"`
 	ToAccountID   pgtype.Int8 `json:"to_account_id"`
 	Amount        int64       `json:"amount"`
 }
 
-func (q *Queries) UpdateATrasferNoReturn(ctx context.Context, arg UpdateATrasferNoReturnParams) error {
-	_, err := q.db.Exec(ctx, updateATrasferNoReturn,
+func (q *Queries) UpdateATransferNoReturn(ctx context.Context, arg UpdateATransferNoReturnParams) error {
+	_, err := q.db.Exec(ctx, updateATransferNoReturn,
 		arg.ID,
 		arg.FromAccountID,
 		arg.ToAccountID,
@@ -141,22 +141,22 @@ func (q *Queries) UpdateATrasferNoReturn(ctx context.Context, arg UpdateATrasfer
 	return err
 }
 
-const updateTrasfer = `-- name: UpdateTrasfer :one
+const updateTransfer = `-- name: UpdateTransfer :one
 UPDATE transfers
 SET from_account_id =$2, to_account_id = $3, amount = $4
 WHERE id = $1
 RETURNING id, from_account_id, to_account_id, amount, created_at
 `
 
-type UpdateTrasferParams struct {
+type UpdateTransferParams struct {
 	ID            int64       `json:"id"`
 	FromAccountID pgtype.Int8 `json:"from_account_id"`
 	ToAccountID   pgtype.Int8 `json:"to_account_id"`
 	Amount        int64       `json:"amount"`
 }
 
-func (q *Queries) UpdateTrasfer(ctx context.Context, arg UpdateTrasferParams) (Transfer, error) {
-	row := q.db.QueryRow(ctx, updateTrasfer,
+func (q *Queries) UpdateTransfer(ctx context.Context, arg UpdateTransferParams) (Transfer, error) {
+	row := q.db.QueryRow(ctx, updateTransfer,
 		arg.ID,
 		arg.FromAccountID,
 		arg.ToAccountID,
