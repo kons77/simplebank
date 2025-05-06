@@ -16,7 +16,8 @@ const (
 var dbSource = getDBSource()
 
 func getDBSource() string {
-	if os.Getenv("CI") == "true" {
+	// if os.Getenv("CI") == "true" {
+	if os.Getenv("GITHUB_ACTIONS") == "true" {
 		// GitHub Actions
 		return "postgresql://postgres:secret@localhost:5438/simplebank?sslmode=disable"
 	}
