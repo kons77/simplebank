@@ -13,10 +13,16 @@ migrateup:
 migratedown:
 	./migrate -path db/migration -database "postgresql://postgres:secret@localhost:5438/simplebank?sslmode=disable" -verbose down
 
+migrateuplocally:
+	./migrate -path db/migration -database "postgresql://postgres:secret@192.168.88.133:5438/simplebank?sslmode=disable" -verbose up
+
+migratedownlocally:
+	./migrate -path db/migration -database "postgresql://postgres:secret@192.168.88.133:5438/simplebank?sslmode=disable" -verbose down
+
 sqlc:
 	sqlc generate
 
 test:
 	go test -v -cover ./...
 
-.PHONY: postgres createdb dropdb migrateup migratedown sqlc test
+.PHONY: postgres createdb dropdb migrateup migratedown migrateuplocally migratedownlocally sqlc test 
