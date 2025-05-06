@@ -5,7 +5,6 @@ migrate*
 .env
 .env.*
 !.env.example
-Makefile
 
 # Binaries for programs and plugins
 *.exe
