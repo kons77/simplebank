@@ -127,3 +127,62 @@ func TestTranferTx(t *testing.T) {
 	require.Equal(t, account1.Balance-int64(n)*amount, updatedAccount1.Balance)
 	require.Equal(t, account2.Balance+int64(n)*amount, updatedAccount2.Balance)
 }
+
+func TestTranferTxDeadlock(t *testing.T) {
+
+	/*The idea is to have 5 transactions that send money from account 1 to account 2,
+	and another 5 transactions that send money in reverse direction from account 2 to account 1.
+	In this case, we only need to check for deadlock error.
+	We don’t need to care about the result because it has already been checked in the other test*/
+
+	account1 := createRandomAccount(t)
+	account2 := createRandomAccount(t)
+	fmt.Println(">> before:", account1.Balance, account2.Balance)
+
+	// run n concurrent transfer transactions
+	n := 10
+	amount := int64(10)
+
+	errs := make(chan error)
+
+	for i := 0; i < n; i++ {
+		FromAccountID := account1.ID
+		ToAccountID := account2.ID
+
+		if i%2 == 1 {
+			FromAccountID = account2.ID
+			ToAccountID = account1.ID
+		}
+
+		go func() {
+
+			ctx := context.Background()
+			_, err := testStore.TransferTx(ctx, TransferTxParams{
+				FromAccountID: util.ToPgInt8(FromAccountID),
+				ToAccountID:   util.ToPgInt8(ToAccountID),
+				Amount:        amount,
+			})
+
+			errs <- err
+		}()
+	}
+
+	// check resultes
+	for i := 0; i < n; i++ {
+		err := <-errs
+		require.NoError(t, err)
+	}
+
+	// check the final updated balance
+	updatedAccount1, err := testStore.GetAccount(context.Background(), account1.ID)
+	require.NoError(t, err)
+
+	updatedAccount2, err := testStore.GetAccount(context.Background(), account2.ID)
+	require.NoError(t, err)
+
+	// fmt.Println(">> after:", updatedAccount1.Balance, account2.Balance)
+	fmt.Println(">> after:", updatedAccount1.Balance, updatedAccount2.Balance)
+
+	require.Equal(t, account1.Balance, updatedAccount1.Balance)
+	require.Equal(t, account2.Balance, updatedAccount2.Balance)
+}
