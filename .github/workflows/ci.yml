@@ -48,7 +48,7 @@ jobs:
         which migrate
 
     - name: Run migrations 
-      run: make migrateup
+      run: migrate -path db/migration -database "postgresql://postgres:secret@localhost:5438/simplebank?sslmode=disable" -verbose down
 
     - name: Test
-      run: go test -v ./...
+      run: go test -v -race -timeout=60s ./...
