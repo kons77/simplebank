@@ -11,8 +11,18 @@ import (
 
 const (
 	dbDriver = "postgres"
-	dbSource = "postgresql://postgres:secret@192.168.88.133:5438/simplebank?sslmode=disable"
 )
+
+var dbSource = getDBSource()
+
+func getDBSource() string {
+	if os.Getenv("CI") == "true" {
+		// GitHub Actions
+		return "postgresql://postgres:secret@localhost:5438/simplebank?sslmode=disable"
+	}
+	// Locally
+	return "postgresql://postgres:secret@192.168.88.133:5438/simplebank?sslmode=disable"
+}
 
 var testStore Store
 
