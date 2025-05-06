@@ -8,10 +8,10 @@ dropdb:
 	docker exec -it pg-simple-bank dropdb --username=postgres simplebank 
 
 migrateup:
-	./migrate -path db/migration -database "postgresql://postgres:secret@localhost:5438/simplebank?sslmode=disable" -verbose up
+	migrate -path db/migration -database "postgresql://postgres:secret@localhost:5438/simplebank?sslmode=disable" -verbose up
 
 migratedown:
-	./migrate -path db/migration -database "postgresql://postgres:secret@localhost:5438/simplebank?sslmode=disable" -verbose down
+	migrate -path db/migration -database "postgresql://postgres:secret@localhost:5438/simplebank?sslmode=disable" -verbose down
 
 migrateuplocally:
 	./migrate -path db/migration -database "postgresql://postgres:secret@192.168.88.133:5438/simplebank?sslmode=disable" -verbose up
