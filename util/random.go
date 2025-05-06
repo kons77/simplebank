@@ -3,6 +3,8 @@ package util
 import (
 	"math/rand"
 	"strings"
+
+	"github.com/brianvoe/gofakeit/v6"
 )
 
 const alphabet = "abcdefghijklmnopqrstuvwxyz"
@@ -34,9 +36,14 @@ func RandomString(n int) string {
 	return sb.String()
 }
 
+// RandomOwnerOld generates a random owner name
+func RandomOwnerOld() string {
+	return RandomString(6)
+}
+
 // RandomOwner generates a random owner name
 func RandomOwner() string {
-	return RandomString(6)
+	return gofakeit.Name()
 }
 
 // RandomMomey generates a random amount of money
