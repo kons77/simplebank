@@ -12,6 +12,9 @@ import (
 
 var testStore Store
 
+var acc11, acc12 Account
+var argTestTransferParams CreateTransferParams
+
 func TestMain(m *testing.M) {
 
 	config, err := util.LoadConfig("../..")
@@ -35,5 +38,50 @@ func TestMain(m *testing.M) {
 
 	testStore = NewStore(testConnPool)
 
+	// сreate accounts once
+	initTestAccounts()
+
+	// сleanup after all tests (will run even if there's a panic)
+	defer cleanupTestAccounts()
+
 	os.Exit(m.Run())
+}
+
+func initTestAccounts() (err error) {
+
+	arg := CreateAccountParams{
+		Owner:    util.RandomOwner(),
+		Balance:  util.RandomMomey(),
+		Currency: util.RandomCurrency(),
+	}
+
+	acc11, err := testStore.CreateAccount(context.Background(), arg)
+	if err != nil {
+		return err
+	}
+
+	arg = CreateAccountParams{
+		Owner:    util.RandomOwner(),
+		Balance:  util.RandomMomey(),
+		Currency: util.RandomCurrency(),
+	}
+
+	acc12, err := testStore.CreateAccount(context.Background(), arg)
+	if err != nil {
+		return err
+	}
+
+	argTestTransferParams = CreateTransferParams{
+		FromAccountID: util.ToPgInt8(acc11.ID),
+		ToAccountID:   util.ToPgInt8(acc12.ID),
+		Amount:        10,
+	}
+
+	return nil
+}
+
+// cleanupTestAccounts delete accounts up after all tests (will run even if there's a panic)
+func cleanupTestAccounts() {
+	_ = testStore.DeleteAccount(context.Background(), acc11.ID)
+	_ = testStore.DeleteAccount(context.Background(), acc12.ID)
 }
