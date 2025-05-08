@@ -21,8 +21,9 @@ func main() {
 	var dbSource string
 	if os.Getenv("GITHUB_ACTIONS") == "true" {
 		dbSource = config.DBSourceGH // path for GitHub Actions
+	} else {
+		dbSource = config.DBSourceLinux // path to the local linux machine
 	}
-	dbSource = config.DBSourceLinux // path to the local linux machine
 
 	connPool, err := pgxpool.New(context.Background(), dbSource)
 	if err != nil {
