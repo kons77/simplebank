@@ -2,10 +2,11 @@ package db
 
 import (
 	"context"
-	"github/kons77/simplebank/util"
 	"log"
 	"os"
 	"testing"
+
+	"github.com/kons77/simplebank/util"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
