@@ -47,7 +47,7 @@ func RandomOwner() string {
 }
 
 // RandomMomey generates a random amount of money
-func RandomMomey() int64 {
+func RandomMoney() int64 {
 	return RandomInt(0, 1000)
 }
 

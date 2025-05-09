@@ -38,20 +38,21 @@ func TestMain(m *testing.M) {
 
 	testStore = NewStore(testConnPool)
 
-	// сreate accounts once
+	/* сreate accounts once
 	initTestAccounts()
 
 	// сleanup after all tests (will run even if there's a panic)
-	defer cleanupTestAccounts()
+	defer cleanupTestAccounts()*/
 
 	os.Exit(m.Run())
 }
 
+/*
 func initTestAccounts() (err error) {
 
 	arg := CreateAccountParams{
 		Owner:    util.RandomOwner(),
-		Balance:  util.RandomMomey(),
+		Balance:  util.RandomMoney(),
 		Currency: util.RandomCurrency(),
 	}
 
@@ -62,7 +63,7 @@ func initTestAccounts() (err error) {
 
 	arg = CreateAccountParams{
 		Owner:    util.RandomOwner(),
-		Balance:  util.RandomMomey(),
+		Balance:  util.RandomMoney(),
 		Currency: util.RandomCurrency(),
 	}
 
@@ -74,7 +75,7 @@ func initTestAccounts() (err error) {
 	argTestTransferParams = CreateTransferParams{
 		FromAccountID: util.ToPgInt8(acc11.ID),
 		ToAccountID:   util.ToPgInt8(acc12.ID),
-		Amount:        10,
+		Amount:        util.RandomMoney(),
 	}
 
 	return nil
@@ -85,3 +86,4 @@ func cleanupTestAccounts() {
 	_ = testStore.DeleteAccount(context.Background(), acc11.ID)
 	_ = testStore.DeleteAccount(context.Background(), acc12.ID)
 }
+*/

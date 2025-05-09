@@ -25,7 +25,12 @@ sqlc:
 test:
 	go test -v -cover ./...
 
+testall: 
+	@echo running all tests 
+	@go test -v ./... -coverprofile="coverage.out" || echo "test fails"
+	@go tool cover -html="coverage.out"
+
 server:
 	go run main.go
 
-.PHONY: postgres createdb dropdb migrateup migratedown migrateuplocally migratedownlocally sqlc test server 
+.PHONY: postgres createdb dropdb migrateup migratedown migrateuplocally migratedownlocally sqlc test server testall 
