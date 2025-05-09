@@ -3,8 +3,9 @@ package db
 import (
 	"context"
 	"fmt"
-	"github/kons77/simplebank/util"
 	"testing"
+
+	"github.com/kons77/simplebank/util"
 
 	"github.com/stretchr/testify/require"
 )

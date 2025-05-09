@@ -10,7 +10,8 @@ sql:
       sql_package: "pgx/v5"
       emit_json_tags: true # we want to have json tags for the db model structs
       # emit_prepared_queries # we don't use prepared queries 
-      emit_interface: true # use it for unit tests 
+      emit_interface: true # use it for unit tests (sqlc creates querier.go with Querier interface
+                            # with all functions to insert and query data from the database)
       # emit_exact_table_names: false # wnat to use single form for table names
       emit_empty_slices: true # slices returned by the query will be empty but not null
       overrides:

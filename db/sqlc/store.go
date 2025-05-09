@@ -8,9 +8,9 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-// Store defines all functions to execute db queries and transactions
+// Store provides all functions to execute db queries and transactions
 type Store interface {
-	Querier
+	Querier // interface with all functions to insert and query data from the database
 	TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error)
 	// CreateUserTx(ctx context.Context, arg CreateUserTxParams) (CreateUserTxResult, error)
 }
