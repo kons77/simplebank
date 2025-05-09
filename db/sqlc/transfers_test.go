@@ -4,6 +4,7 @@ import (
 	"context"
 	"github/kons77/simplebank/util"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 )
@@ -34,7 +35,13 @@ func TestCreateTransfer(t *testing.T) {
 	account1 := createRandomAccount(t)
 	account2 := createRandomAccount(t)
 
-	createRandomTransfer(t, account1, account2)
+	transfer1 := createRandomTransfer(t, account1, account2)
+
+	//clean up
+	testStore.DeleteTransfer(context.Background(), transfer1.ID)
+	testStore.DeleteAccount(context.Background(), account1.ID)
+	testStore.DeleteAccount(context.Background(), account2.ID)
+
 }
 
 func TestDeleteTransfer(t *testing.T) {
@@ -45,6 +52,10 @@ func TestDeleteTransfer(t *testing.T) {
 
 	err := testStore.DeleteTransfer(context.Background(), transfer1.ID)
 	require.NoError(t, err)
+
+	//clean up
+	testStore.DeleteAccount(context.Background(), account1.ID)
+	testStore.DeleteAccount(context.Background(), account2.ID)
 
 }
 
@@ -108,5 +119,6 @@ func TestUpdateTranfer(t *testing.T) {
 	require.Equal(t, transfer1.ToAccountID, transfer2.ToAccountID)
 	// t.Log(transfer1.Amount, transfer2.Amount, arg.Amount)
 	require.Equal(t, transfer2.Amount, arg.Amount)
+	require.WithinDuration(t, transfer2.CreatedAt, transfer1.CreatedAt, time.Second)
 
 }
