@@ -13,7 +13,7 @@ import (
 func createRandomAccount(t *testing.T) Account {
 	arg := CreateAccountParams{
 		Owner:    util.RandomOwner(),
-		Balance:  util.RandomMomey(),
+		Balance:  util.RandomMoney(),
 		Currency: util.RandomCurrency(),
 	}
 
@@ -56,7 +56,7 @@ func TestUpdateAccount(t *testing.T) {
 
 	arg := UpdateAccountParams{
 		ID:      acc1.ID,
-		Balance: util.RandomMomey(),
+		Balance: util.RandomMoney(),
 	}
 
 	acc2, err := testStore.UpdateAccount(context.Background(), arg)
@@ -99,5 +99,4 @@ func TestListAccount(t *testing.T) {
 	for _, acc := range accounts {
 		require.NotEmpty(t, acc)
 	}
-
 }
