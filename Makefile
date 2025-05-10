@@ -37,7 +37,6 @@ test:
 	go test -v -cover ./...
 
 testall: 
-	@rm -f coverage.out
 	@echo running all tests with covers
 	@go test -v ./... -coverprofile="coverage.out" || echo "test fails"
 	@go tool cover -html="coverage.out"
