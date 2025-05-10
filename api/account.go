@@ -11,7 +11,7 @@ import (
 
 type createAccountRequest struct {
 	Owner    string `json:"owner" binding:"required"`
-	Currency string `json:"currency" binding:"required,oneof=USD EUR CAD"`
+	Currency string `json:"currency" binding:"required,currency"`
 	// Balance  int64  `json:"balance"`  -  initial balance should always be 0 .
 	// We only allow clitnes to specify the owner's name and the currency
 }
