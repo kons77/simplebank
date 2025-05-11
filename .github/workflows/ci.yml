@@ -50,6 +50,9 @@ jobs:
     - name: Run migrations 
       run: migrate -path db/migration -database "postgresql://postgres:secret@localhost:5438/simplebank?sslmode=disable" -verbose up
 
+    - name: Run mockgen 
+      run: mockgen -package mockdb -destination db/mock/store.go github.com/kons77/simplebank/db/sqlc Store 
+      
     - name: Test
       env:
         CI: "true"
