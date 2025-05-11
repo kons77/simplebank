@@ -1,0 +1,77 @@
+package api
+
+import (
+	"log"
+	"net/http"
+	"time"
+
+	"github.com/jackc/pgx/v5/pgconn"
+	db "github.com/kons77/simplebank/db/sqlc"
+	"github.com/kons77/simplebank/util"
+
+	"github.com/gin-gonic/gin"
+)
+
+type createUserRequest struct {
+	Username string `json:"username" binding:"required,alphanum"`
+	Password string `json:"password" binding:"required,min=6"`
+	FullName string `json:"full_name" binding:"required"`
+	Email    string `json:"email" binding:"required,email"`
+}
+
+type createUserResponse struct {
+	Username          string    `json:"username"`
+	FullName          string    `json:"full_name"`
+	Email             string    `json:"email"`
+	PasswordChangedAt time.Time `json:"password_changed_at"`
+	CreatedAt         time.Time `json:"created_at"`
+	// HashedPassword -- DO NOT BACK hashed password due to security reasons
+}
+
+func (server *Server) createUser(ctx *gin.Context) {
+	var req createUserRequest
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	hashedPassword, err := util.HashPassword(req.Password)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	arg := db.CreateUserParams{
+		Username:       req.Username,
+		HashedPassword: hashedPassword,
+		FullName:       req.FullName,
+		Email:          req.Email,
+	}
+
+	user, err := server.store.CreateUser(ctx, arg)
+	if err != nil {
+		// *pq.Error for lib/pq, *pgconn.PgError for jackc/pgx/v5
+
+		if pqErr, ok := err.(*pgconn.PgError); ok {
+			log.Println(pqErr.Code, pqErr.Message)
+			switch pqErr.Code {
+			case "23505": //23505 unique violation
+				ctx.JSON(http.StatusForbidden, errorResponse(err))
+				return
+			}
+		}
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	rsp := createUserResponse{
+		Username:          user.Username,
+		FullName:          user.FullName,
+		Email:             user.Email,
+		PasswordChangedAt: user.PasswordChangedAt,
+		CreatedAt:         user.CreatedAt,
+	}
+
+	ctx.JSON(http.StatusOK, rsp)
+}
