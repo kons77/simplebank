@@ -50,9 +50,14 @@ jobs:
     - name: Run migrations 
       run: migrate -path db/migration -database "postgresql://postgres:secret@localhost:5438/simplebank?sslmode=disable" -verbose up
 
+    - name: Install golang-mekgen
+      run: |
+        go install github.com/golang/mock/mockgen@v1.6.0
+        go get github.com/golang/mock/mockgen/model@v1.6.0
+
     - name: Run mockgen 
       run: mockgen -package mockdb -destination db/mock/store.go github.com/kons77/simplebank/db/sqlc Store 
-      
+
     - name: Test
       env:
         CI: "true"
