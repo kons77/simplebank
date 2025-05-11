@@ -2,6 +2,7 @@ package util
 
 import (
 	"math/rand"
+	"os"
 	"strings"
 
 	"github.com/brianvoe/gofakeit/v6"
@@ -69,7 +70,13 @@ func RandomCurrency() string {
 
 // generated hashed password
 func HashPassword(pswd string) ([]byte, error) {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(pswd), 12)
+
+	cost := 12 // default for production
+	if os.Getenv("TEST_ENV") == "true" {
+		cost = bcrypt.MinCost // much faster for tests
+	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(pswd), cost)
 	if err != nil {
 		return nil, err
 	}

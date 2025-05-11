@@ -15,6 +15,8 @@ var testStore Store
 
 func TestMain(m *testing.M) {
 
+	os.Setenv("TEST_ENV", "true")
+
 	config, err := util.LoadConfig("../..")
 	if err != nil {
 		log.Fatal("cannot load config:", err)
