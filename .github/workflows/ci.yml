@@ -61,4 +61,4 @@ jobs:
     - name: Test
       env:
         CI: "true"
-      run: go test -v -race -timeout=180s ./...
+      run: go test -v -race -timeout=180s ./... # it's better 60 seconds
