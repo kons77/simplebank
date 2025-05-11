@@ -2,8 +2,10 @@ package api
 
 import (
 	"database/sql"
+	"log"
 	"net/http"
 
+	"github.com/jackc/pgx/v5/pgconn"
 	db "github.com/kons77/simplebank/db/sqlc"
 
 	"github.com/gin-gonic/gin"
@@ -31,6 +33,16 @@ func (server *Server) createAccount(ctx *gin.Context) {
 
 	account, err := server.store.CreateAccount(ctx, arg)
 	if err != nil {
+		// *pq.Error for lib/pq, *pgconn.PgError for jackc/pgx/v5
+
+		if pqErr, ok := err.(*pgconn.PgError); ok {
+			log.Println(pqErr.Code, pqErr.Message)
+			switch pqErr.Code {
+			case "23503", "23505":
+				ctx.JSON(http.StatusForbidden, errorResponse(err))
+				return
+			}
+		}
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}

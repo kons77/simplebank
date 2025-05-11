@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/brianvoe/gofakeit/v6"
+	"golang.org/x/crypto/bcrypt"
 )
 
 const alphabet = "abcdefghijklmnopqrstuvwxyz"
@@ -37,8 +38,10 @@ func RandomString(n int) string {
 }
 
 // RandomOwnerOld generates a random owner name
-func RandomOwnerOld() string {
-	return RandomString(6)
+func RandomUsername() string {
+	// return RandomString(6)
+	return gofakeit.Username()
+
 }
 
 // RandomOwner generates a random owner name
@@ -46,7 +49,13 @@ func RandomOwner() string {
 	return gofakeit.Name()
 }
 
-// RandomMomey generates a random amount of money
+// RandomEmail generates a random owner name
+func RandomEmail() string {
+	// return fmt.Sprintf("%s@email.com", RandomString(6))
+	return gofakeit.Email()
+}
+
+// RandomMoney generates a random amount of money
 func RandomMoney() int64 {
 	return RandomInt(0, 1000)
 }
@@ -56,4 +65,14 @@ func RandomCurrency() string {
 	currencies := []string{EUR, USD, CAD}
 	n := len(currencies)
 	return currencies[rand.Intn(n)]
+}
+
+// generated hashed password
+func HashPassword(pswd string) ([]byte, error) {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(pswd), 12)
+	if err != nil {
+		return nil, err
+	}
+
+	return hashedPassword, nil
 }
