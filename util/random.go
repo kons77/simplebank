@@ -2,11 +2,9 @@ package util
 
 import (
 	"math/rand"
-	"os"
 	"strings"
 
 	"github.com/brianvoe/gofakeit/v6"
-	"golang.org/x/crypto/bcrypt"
 )
 
 const alphabet = "abcdefghijklmnopqrstuvwxyz"
@@ -66,20 +64,4 @@ func RandomCurrency() string {
 	currencies := []string{EUR, USD, CAD}
 	n := len(currencies)
 	return currencies[rand.Intn(n)]
-}
-
-// generated hashed password
-func HashPassword(pswd string) ([]byte, error) {
-
-	cost := 12 // default for production
-	if os.Getenv("TEST_ENV") == "true" {
-		cost = bcrypt.MinCost // much faster for tests
-	}
-
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(pswd), cost)
-	if err != nil {
-		return nil, err
-	}
-
-	return hashedPassword, nil
 }

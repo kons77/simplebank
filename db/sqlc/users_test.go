@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"encoding/base64"
 	"testing"
 	"time"
 
@@ -11,13 +10,12 @@ import (
 )
 
 func createRandomUser(t *testing.T) User {
-	h, err := util.HashPassword("secret")
+	hPswd, err := util.HashPassword("secret")
 	require.NoError(t, err)
-	pswd := base64.StdEncoding.EncodeToString(h)
 
 	arg := CreateUserParams{
 		Username:       util.RandomUsername(),
-		HashedPassword: pswd,
+		HashedPassword: hPswd,
 		FullName:       util.RandomOwner(),
 		Email:          util.RandomEmail(),
 	}
