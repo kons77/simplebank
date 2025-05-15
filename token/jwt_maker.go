@@ -10,6 +10,24 @@ import (
 
 const minSecretKeySize = 32
 
+type JWTPayloadClaims struct {
+	Payload
+	jwt.RegisteredClaims // embedding
+}
+
+// NewPayload creates a new token payload with a specific username and duration
+func NewJWTPayloadClaims(payload *Payload) *JWTPayloadClaims {
+	jwtPayload := &JWTPayloadClaims{
+		Payload: *payload,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(payload.ExpiresAt),
+			IssuedAt:  jwt.NewNumericDate(payload.IssuedAt),
+		},
+	}
+
+	return jwtPayload
+}
+
 // JWTMaker is a JSON Web Token maker
 type JWTMaker struct {
 	secretKey string
@@ -30,7 +48,7 @@ func (maker *JWTMaker) CreateToken(username string, duration time.Duration) (str
 		return "", nil
 	}
 
-	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
+	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, NewJWTPayloadClaims(payload))
 	return jwtToken.SignedString([]byte(maker.secretKey))
 
 }
@@ -45,7 +63,9 @@ func (maker *JWTMaker) VerifyToken(token string) (*Payload, error) {
 		return []byte(maker.secretKey), nil
 	}
 
-	jwtToken, err := jwt.ParseWithClaims(token, &Payload{}, keyFunc)
+	jwtClaims := &JWTPayloadClaims{}
+
+	jwtToken, err := jwt.ParseWithClaims(token, jwtClaims, keyFunc)
 	if err != nil {
 		if errors.Is(err, jwt.ErrTokenExpired) {
 			return nil, ErrExpiredToken
@@ -53,10 +73,10 @@ func (maker *JWTMaker) VerifyToken(token string) (*Payload, error) {
 		return nil, ErrInvalidToken
 	}
 
-	payload, ok := jwtToken.Claims.(*Payload)
+	payloadClaims, ok := jwtToken.Claims.(*JWTPayloadClaims)
 	if !ok {
 		return nil, ErrInvalidToken
 	}
 
-	return payload, nil
+	return &payloadClaims.Payload, nil
 }

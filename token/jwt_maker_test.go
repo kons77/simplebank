@@ -29,8 +29,8 @@ func TestJWTMaker(t *testing.T) {
 
 	require.NotZero(t, payload.ID)
 	require.Equal(t, username, payload.Username)
-	require.WithinDuration(t, issuedAt, payload.IssuedAt.Time, time.Second)
-	require.WithinDuration(t, expiredAt, payload.ExpiresAt.Time, time.Second)
+	require.WithinDuration(t, issuedAt, payload.IssuedAt, time.Second)
+	require.WithinDuration(t, expiredAt, payload.ExpiresAt, time.Second)
 
 }
 
@@ -52,7 +52,9 @@ func TestInvalidJWTTokenAlgNone(t *testing.T) {
 	payload, err := NewPayload(util.RandomUsername(), time.Minute)
 	require.NoError(t, err)
 
-	jwtToken := jwt.NewWithClaims(jwt.SigningMethodNone, payload)
+	claims := NewJWTPayloadClaims(payload)
+
+	jwtToken := jwt.NewWithClaims(jwt.SigningMethodNone, claims)
 	token, err := jwtToken.SignedString(jwt.UnsafeAllowNoneSignatureType)
 	require.NoError(t, err)
 
