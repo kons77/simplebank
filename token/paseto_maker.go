@@ -9,6 +9,10 @@ import (
 	"github.com/o1egl/paseto"
 )
 
+/*
+! From paseto.io , it looks like o1egl 's paseto package stop the support to v2
+! and now there are v3 and v4 go-paseto supports v3/v4
+*/
 // PasetoMaker is a PASETO token maker
 type PasetoMaker struct {
 	paseto       *paseto.V2
