@@ -22,6 +22,7 @@ type Server struct {
 
 // NewServer creates a new HTTP server and setup routing
 func NewServer(config util.Config, store db.Store) (*Server, error) {
+	// tokenMaker, err := token.NewJWTMaker(config.TokenSymmetricKey) // for JWT tokens
 	tokenMaker, err := token.NewPasetoMaker([]byte(config.TokenSymmetricKey), []byte("some_implicit"))
 	if err != nil {
 		return nil, fmt.Errorf("cannot create token maker: %w", err)
