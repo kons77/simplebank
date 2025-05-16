@@ -3,6 +3,7 @@ module github.com/kons77/simplebank
 go 1.24.2
 
 require (
+	aidanwoods.dev/go-paseto v1.5.4
 	github.com/brianvoe/gofakeit/v6 v6.28.0
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-playground/validator/v10 v10.26.0
@@ -17,6 +18,7 @@ require (
 )
 
 require (
+	aidanwoods.dev/go-result v0.3.1 // indirect
 	github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da // indirect
 	github.com/aead/chacha20poly1305 v0.0.0-20170617001512-233f39982aeb // indirect
 	github.com/aead/poly1305 v0.0.0-20180717145839-3fee0db0b635 // indirect

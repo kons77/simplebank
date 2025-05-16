@@ -1,3 +1,7 @@
+aidanwoods.dev/go-paseto v1.5.4 h1:MH+SBroZEk5Q5pjhVh4l48HIbrdWhWI3SZmA/DXhnuw=
+aidanwoods.dev/go-paseto v1.5.4/go.mod h1:Rn37AIcqrvSMu0YPw65CrlEUuoyKL6Yw6B0htrGr3EU=
+aidanwoods.dev/go-result v0.3.1 h1:ee98hpohYUVYbI+pa6gUHTyoRerIudgjky/IPSowDXQ=
+aidanwoods.dev/go-result v0.3.1/go.mod h1:GKnFg8p/BKulVD3wsfULiPhpPmrTWyiTIbz8EWuUqSk=
 github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da h1:KjTM2ks9d14ZYCvmHS9iAKVt9AyzRSqNU1qabPih5BY=
 github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da/go.mod h1:eHEWzANqSiWQsof+nXEI9bUVUyV6F53Fp89EuCh2EAA=
 github.com/aead/chacha20poly1305 v0.0.0-20170617001512-233f39982aeb h1:6Z/wqhPFZ7y5ksCEV/V5MXOazLaeu/EW97CU5rz8NWk=
