@@ -1,22 +1,34 @@
 package util
 
 import (
+	crand "crypto/rand"
 	"math/rand"
 	"strings"
+	"time"
 
 	"github.com/brianvoe/gofakeit/v6"
 )
 
 const alphabet = "abcdefghijklmnopqrstuvwxyz"
 
-func init() {
-	//
+// var rng = rand.New(rand.NewSource(time.Now().UnixNano()))  -  deprecated
 
+func init() {
+	gofakeit.Seed(time.Now().UnixNano())
 }
 
 // RandomInt generates a random integer between min and max
 func RandomInt(min, max int64) int64 {
 	return min + rand.Int63n(max-min+1)
+}
+
+func RandomBytes(n int) []byte {
+	b := make([]byte, n)
+	_, err := crand.Read(b)
+	if err != nil {
+		panic("cannot generate random bytes: " + err.Error())
+	}
+	return b
 }
 
 func RandomString(n int) string {
