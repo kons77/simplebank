@@ -1,7 +1,5 @@
-# db source for local dev linux pc 
-DSN_LINUX=postgresql://postgres:secret@192.168.88.133:5438/simplebank?sslmode=disable
-# db source for github actions 
-DSN_GH=postgresql://postgres:secret@localhost:5438/simplebank?sslmode=disable
+# Use DB_SOURCE from environment or default to localhost for safety
+DB_SOURCE ?= postgresql://postgres:secret@localhost:5438/simplebank?sslmode=disable
 
 postgres: 
 	docker run --name pg-simple-bank -p 5438:5432 -e POSTGRES_PASSWORD=secret -d postgres
@@ -13,22 +11,16 @@ dropdb:
 	docker exec -it pg-simple-bank dropdb --username=postgres simplebank 
 
 migrateup:
-	migrate -path db/migration -database "${DSN_GH}" -verbose up
+	migrate -path db/migration -database "${DB_SOURCE}" -verbose up
 
 migrateup1:
-	migrate -path db/migration -database "${DSN_GH}" -verbose up 1
+	migrate -path db/migration -database "${DB_SOURCE}" -verbose up 1
 
 migratedown:
-	migrate -path db/migration -database "${DSN_GH}" -verbose down
+	migrate -path db/migration -database "${DB_SOURCE}" -verbose down
 
 migratedown1: 
-	migrate -path db/migration -database "${DSN_GH}" -verbose down 1
-
-migrateup_lcl:
-	migrate -path db/migration -database "${DSN_LINUX}" -verbose up
-
-migratedown_lcl:
-	migrate -path db/migration -database "${DSN_LINUX}" -verbose down
+	migrate -path db/migration -database "${DB_SOURCE}" -verbose down 1
 
 sqlc:
 	sqlc generate
