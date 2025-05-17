@@ -14,6 +14,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     
+    env:
+      DB_SOURCE: ${{ secrets.DB_SOURCE }}
+      TOKEN_SYMMETRIC_KEY: ${{ secrets.TOKEN_SYMMETRIC_KEY }}
+
     services:
       # Label used to access the service container
       postgres:
@@ -47,8 +51,11 @@ jobs:
         sudo mv migrate /usr/bin/
         which migrate
 
+    - name: Wait for Postgres
+      run: sleep 10
+
     - name: Run migrations 
-      run: migrate -path db/migration -database "postgresql://postgres:secret@localhost:5438/simplebank?sslmode=disable" -verbose up
+      run: migrate -path db/migration -database "$DB_SOURCE" -verbose up
 
     - name: Install golang-mockgen
       run: |
@@ -59,6 +66,4 @@ jobs:
       run: mockgen -package mockdb -destination db/mock/store.go github.com/kons77/simplebank/db/sqlc Store 
 
     - name: Test
-      env:
-        CI: "true"
       run: go test -v -race -timeout=180s ./... # it's better 60 seconds
