@@ -67,3 +67,6 @@ jobs:
 
     - name: Test
       run: go test -v -race -timeout=180s ./... # it's better 60 seconds
+      env:
+        DB_SOURCE: ${{ secrets.DB_SOURCE }}
+        TOKEN_SYMMETRIC_KEY: ${{ secrets.TOKEN_SYMMETRIC_KEY }}
