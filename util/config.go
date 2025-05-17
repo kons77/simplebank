@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/spf13/viper"
@@ -24,9 +25,9 @@ func LoadConfig(path string) (config Config, err error) {
 
 	viper.AutomaticEnv()
 
-	err = viper.ReadInConfig()
-	if err != nil {
-		return
+	// Don't fail if the config file is missing — for CI environments
+	if err = viper.ReadInConfig(); err != nil {
+		fmt.Println("Config file not found, using only environment variables")
 	}
 
 	err = viper.Unmarshal(&config)
