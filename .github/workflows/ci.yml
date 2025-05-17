@@ -51,8 +51,14 @@ jobs:
         sudo mv migrate /usr/bin/
         which migrate
 
-    - name: Wait for Postgres
-      run: sleep 10
+    #- name: Wait for Postgres
+    #  run: sleep 10
+
+    - name: Setup configuration file
+      run: |
+        cp app.env.template app.env
+        sed -i 's|${DB_SOURCE}|${{ secrets.DB_SOURCE }}|g' app.env
+        sed -i 's|${TOKEN_SYMMETRIC_KEY}|${{ secrets.TOKEN_SYMMETRIC_KEY }}|g' app.env
 
     - name: Run migrations 
       run: migrate -path db/migration -database "$DB_SOURCE" -verbose up
@@ -66,7 +72,4 @@ jobs:
       run: mockgen -package mockdb -destination db/mock/store.go github.com/kons77/simplebank/db/sqlc Store 
 
     - name: Test
-      run: go test -v -race -timeout=180s ./... # it's better 60 seconds
-      env:
-        DB_SOURCE: ${{ secrets.DB_SOURCE }}
-        TOKEN_SYMMETRIC_KEY: ${{ secrets.TOKEN_SYMMETRIC_KEY }}
+      run: go test -v -race -timeout=60s ./... # it's better 60 seconds
