@@ -1,4 +1,4 @@
-package token
+package token // !! V2 OUTDATED VERSION OF PASETO
 
 import (
 	"fmt"
@@ -9,10 +9,9 @@ import (
 	"github.com/o1egl/paseto"
 )
 
-/*
-! From paseto.io , it looks like o1egl 's paseto package stop the support to v2
-! and now there are v3 and v4 go-paseto supports v3/v4
-*/
+/* From paseto.io , it looks like o1egl 's paseto package stop the support to v2
+and now there are v3 and v4 go-paseto supports v3/v4 */
+
 // PasetoMaker is a PASETO v2 (outdated) token maker
 type PasetoMaker2 struct {
 	paseto       *paseto.V2
