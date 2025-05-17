@@ -1,4 +1,4 @@
-package token
+package token // !! V2 OUTDATED VERSION OF PASETO
 
 import (
 	"testing"
