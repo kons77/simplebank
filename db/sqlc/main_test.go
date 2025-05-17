@@ -31,6 +31,7 @@ func TestMain(m *testing.M) {
 	for _, key := range []string{"DB_SOURCE", "TOKEN_SYMMETRIC_KEY"} {
 		fmt.Printf("%s = %s\n", key, os.Getenv(key))
 	}
+	fmt.Println("dbSource: ", dbSource)
 
 	// pgx.Connect - create only on connection
 	testConnPool, err := pgxpool.New(context.Background(), dbSource)
