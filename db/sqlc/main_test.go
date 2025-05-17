@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"testing"
@@ -25,6 +26,10 @@ func TestMain(m *testing.M) {
 	dbSource := config.DBSource
 	if dbSource == "" {
 		log.Fatal("DB_SOURCE environment variable not set")
+	}
+
+	for _, key := range []string{"DB_SOURCE", "TOKEN_SYMMETRIC_KEY"} {
+		fmt.Printf("%s = %s\n", key, os.Getenv(key))
 	}
 
 	// pgx.Connect - create only on connection
