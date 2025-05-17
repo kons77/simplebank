@@ -41,6 +41,6 @@ mock:
 
 # run github actions locally using act, docker required
 actcheck:
-    act -s DB_SOURCE=${DB_SOURCE} -s TOKEN_SYMMETRIC_KEY=12345678123456781234567812345678
+	act -s DB_SOURCE=${DB_SOURCE} -s TOKEN_SYMMETRIC_KEY=12345678123456781234567812345678
 
 .PHONY: postgres createdb dropdb migrateup migratedown migrateup1 migratedown1 migrateup_lcl migratedown_lcl sqlc test server testall mock actcheck
