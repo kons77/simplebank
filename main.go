@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"log"
-	"os"
 
 	"github.com/kons77/simplebank/api"
 	db "github.com/kons77/simplebank/db/sqlc"
@@ -19,12 +18,7 @@ func main() {
 		log.Fatal("cannot load config:", err)
 	}
 
-	var dbSource string
-	if os.Getenv("GITHUB_ACTIONS") == "true" {
-		dbSource = config.DBSourceGH // path for GitHub Actions
-	} else {
-		dbSource = config.DBSourceLinux // path to the local linux machine
-	}
+	dbSource := config.DBSource
 
 	connPool, err := pgxpool.New(context.Background(), dbSource)
 	if err != nil {
