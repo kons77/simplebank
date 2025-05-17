@@ -10,8 +10,7 @@ import (
 // The values are read by viper from a config file or environment variables.
 type Config struct {
 	DBDriver            string        `mapstructure:"DB_DRIVER"`
-	DBSourceLinux       string        `mapstructure:"DB_SOURCE_LINUX"`
-	DBSourceGH          string        `mapstructure:"DB_SOURCE_GH"`
+	DBSource            string        `mapstructure:"DB_SOURCE"`
 	ServerAddress       string        `mapstructure:"SERVER_ADDRESS"`
 	TokenSymmetricKey   string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`
 	AccessTokenDuration time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`

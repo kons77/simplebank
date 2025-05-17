@@ -22,12 +22,9 @@ func TestMain(m *testing.M) {
 		log.Fatal("cannot load config:", err)
 	}
 
-	var dbSource string
-	if os.Getenv("GITHUB_ACTIONS") == "true" {
-		log.Println("Running inside GitHub Actions")
-		dbSource = config.DBSourceGH // path for GitHub Actions
-	} else {
-		dbSource = config.DBSourceLinux // path to the local linux machine
+	dbSource := config.DBSource
+	if dbSource == "" {
+		log.Fatal("DB_SOURCE environment variable not set")
 	}
 
 	// pgx.Connect - create only on connection
