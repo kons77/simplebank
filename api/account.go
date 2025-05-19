@@ -2,17 +2,19 @@ package api
 
 import (
 	"database/sql"
+	"errors"
 	"log"
 	"net/http"
 
 	"github.com/jackc/pgx/v5/pgconn"
 	db "github.com/kons77/simplebank/db/sqlc"
+	"github.com/kons77/simplebank/token"
 
 	"github.com/gin-gonic/gin"
 )
 
 type createAccountRequest struct {
-	Owner    string `json:"owner" binding:"required"`
+	//Owner    string `json:"owner" binding:"required"` - should be username of the logged in user, stored in the authorization payload
 	Currency string `json:"currency" binding:"required,currency"`
 	// Balance  int64  `json:"balance"`  -  initial balance should always be 0 .
 	// We only allow clitnes to specify the owner's name and the currency
@@ -25,8 +27,9 @@ func (server *Server) createAccount(ctx *gin.Context) {
 		return
 	}
 
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
 	arg := db.CreateAccountParams{
-		Owner:    req.Owner,
+		Owner:    authPayload.Username,
 		Currency: req.Currency,
 		Balance:  0,
 	}
@@ -72,6 +75,13 @@ func (server *Server) getAccount(ctx *gin.Context) {
 		return
 	}
 
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+	if account.Owner != authPayload.Username {
+		err := errors.New("account doesn't belong to the authenticated user")
+		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
+		return
+	}
+
 	ctx.JSON(http.StatusOK, account)
 }
 
@@ -87,7 +97,10 @@ func (server *Server) listAccount(ctx *gin.Context) {
 		return
 	}
 
+	// get the authorization payload from the context
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
 	arg := db.ListAccountsParams{
+		Owner:  authPayload.Username,
 		Limit:  req.PageSize,
 		Offset: (req.PageID - 1) * req.PageSize,
 	}
