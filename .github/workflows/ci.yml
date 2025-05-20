@@ -51,9 +51,6 @@ jobs:
         sudo mv migrate /usr/bin/
         which migrate
 
-    #- name: Wait for Postgres
-    #  run: sleep 10
-
     - name: Setup configuration file
       run: |
         cp app.env.template app.env
