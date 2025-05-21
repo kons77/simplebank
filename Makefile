@@ -2,7 +2,10 @@
 DB_SOURCE ?= postgresql://postgres:secret@localhost:5438/simplebank?sslmode=disable
 
 postgres: 
-	docker run --name pg-simple-bank -p 5438:5432 -e POSTGRES_PASSWORD=secret -d postgres
+	docker run --name pg-simplebank -p 5438:5432 -e POSTGRES_PASSWORD=secret -d postgres
+
+postgres2: 
+	docker run --name pg-simplebank --network bank-network -p 5438:5432 -e POSTGRES_PASSWORD=secret -d postgres
 
 createdb:
 	docker exec -it pg-simple-bank createdb --username=postgres --owner=postgres simplebank 
