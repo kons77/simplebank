@@ -1,0 +1,54 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: ci-test-local
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+    
+    env:
+      DB_SOURCE: ${{ secrets.DB_SOURCE }}
+      TOKEN_SYMMETRIC_KEY: ${{ secrets.TOKEN_SYMMETRIC_KEY }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.24' # ^1.24 
+
+    - name: Install golang-migrate
+      run: |
+        curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.3/migrate.linux-amd64.tar.gz | tar xvz
+        sudo mv migrate /usr/bin/
+        which migrate
+
+    - name: Setup configuration file
+      run: |
+        cat <<EOF > app.env
+        DB_SOURCE=${{ secrets.DB_SOURCE }}
+        TOKEN_SYMMETRIC_KEY=${{ secrets.TOKEN_SYMMETRIC_KEY }}
+        EOF
+
+    - name: Run migrations 
+      run: migrate -path db/migration -database "$DB_SOURCE" -verbose up
+
+    - name: Install golang-mockgen
+      run: |
+        go install github.com/golang/mock/mockgen@v1.6.0
+        go get github.com/golang/mock/mockgen/model@v1.6.0
+
+    - name: Run mockgen 
+      run: mockgen -package mockdb -destination db/mock/store.go github.com/kons77/simplebank/db/sqlc Store 
+
+    - name: Test
+      run: go test -v -race -timeout=60s ./... # it's better 60 seconds
