@@ -48,5 +48,13 @@ actcheck:
 		-s DB_SOURCE=${DB_SOURCE} \
 		-s TOKEN_SYMMETRIC_KEY=12345678123456781234567812345678
 
+# run CI and save output to log
+actlog:
+	mkdir -p logs
+	act -W .github/workflows/ci-test-local.yml \
+		-s DB_SOURCE=${DB_SOURCE} \
+		-s TOKEN_SYMMETRIC_KEY=12345678123456781234567812345678 \
+		| tee logs/ci-act-$(shell date +"%Y%m%d-%H%M%S").log
+
 .PHONY: postgres createdb dropdb migrateup migratedown migrateup1 migratedown1 \
 	sqlc test server testall mock actcheck
