@@ -44,14 +44,14 @@ mock:
 
 # run github actions locally using act, docker required
 actcheck:
-	act workflow_dispatch -W .github/workflows/ci-test-local.yml \
+	act workflow_dispatch -W .github/act-only/ci-test-local.yml \
 		-s DB_SOURCE=${DB_SOURCE} \
 		-s TOKEN_SYMMETRIC_KEY=12345678123456781234567812345678
 
 # run CI and save output to log
 actlog:
 	mkdir -p logs
-	act workflow_dispatch -W .github/workflows/ci-test-local.yml \
+	act workflow_dispatch -W .github/act-only/ci-test-local.yml \
 		-s DB_SOURCE=${DB_SOURCE} \
 		-s TOKEN_SYMMETRIC_KEY=12345678123456781234567812345678 \
 		| tee logs/ci-act-$(shell date +"%Y%m%d-%H%M%S").log
