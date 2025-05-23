@@ -13,6 +13,7 @@ COPY --from=builder /app/main .
 COPY --from=builder app/migrate ./migrate
 COPY app.env .
 COPY start.sh .
+RUN chmod +x start.sh
 COPY db/migration ./migration
 
 # which port are intented to be published 
