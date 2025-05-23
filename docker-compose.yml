@@ -17,3 +17,7 @@ services:
       - "8080:8080"
     environment:
       - DB_SOURCE=postgresql://postgres:secret@postgres_simplebank:5432/simplebank?sslmode=disable
+    depends_on:
+      - postgres_simplebank
+    entrypoint: [ "/app/wait-for.sh", "postgres_simplebank:5432", "--", "/app/start.sh" ]
+    command: [ "/app/main" ]
