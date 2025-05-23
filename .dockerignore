@@ -48,8 +48,8 @@ Thumbs.db
 Dockerfile*
 
 # Ignore shell scripts (unless explicitly needed in image)
-*.sh
-!wait-for-it.sh  # include this one if you're using it inside the container
+# *.sh
+# !wait-for-it.sh  # include this one if you're using it inside the container
 
 # Ignore frontend dependencies (if applicable in future)
 node_modules/
