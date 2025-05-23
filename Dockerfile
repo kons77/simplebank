@@ -13,9 +13,9 @@ COPY --from=builder /app/main .
 COPY --from=builder app/migrate ./migrate
 COPY app.env .
 COPY start.sh .
-COPY wait-for-it.sh .
+COPY wait-for.sh .
 RUN chmod +x start.sh
-RUN chmod +x wait-for-it.sh
+RUN chmod +x wait-for.sh
 COPY db/migration ./migration
 
 # which port are intented to be published 
