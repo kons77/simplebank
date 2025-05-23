@@ -1,6 +1,10 @@
 # migrate pre-compiled binary
 migrate*
 
+# docker volumes / DB data
+db-data/
+*.db
+
 # Ignore environment files
 *.env
 .env

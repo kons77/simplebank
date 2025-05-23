@@ -1,0 +1,57 @@
+# Ignore Go build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+main
+bin/
+
+# Ignore Go workspace metadata (Go 1.18+)
+go.work
+go.work.sum
+
+# Ignore database volumes and files
+db-data/
+*.db
+
+# Ignore environment and secrets
+.env
+.env.*
+*.env
+!.env.example
+!.env.template
+
+# Ignore editor config files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore log files
+logs/
+*.log
+
+# Ignore OS-generated files
+.DS_Store
+Thumbs.db
+
+# Ignore Git metadata
+.git/
+.gitignore
+
+# Ignore Docker config files themselves
+.dockerignore
+Dockerfile*
+
+# Ignore shell scripts (unless explicitly needed in image)
+*.sh
+!wait-for-it.sh  # include this one if you're using it inside the container
+
+# Ignore frontend dependencies (if applicable in future)
+node_modules/
+
+# Ignore Python cache (if you ever experiment)
+__pycache__/
