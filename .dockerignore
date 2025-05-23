@@ -23,6 +23,7 @@ db-data/
 *.env
 !.env.example
 !.env.template
+!app.env
 
 # Ignore editor config files
 .vscode/
