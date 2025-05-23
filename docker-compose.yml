@@ -1,0 +1,17 @@
+services:
+  postgres_simplebank:
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=simplebank
+    volumes:
+      - ./db-data/pg-simplebank/:/var/lib/postgresql/data/
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_SOURCE=postgresql://postgres:secret@postgres_simplebank:5438/simplebank?sslmode=disable
