@@ -21,6 +21,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Setup configuration file
+        run: |
+          cp app.env.template app.env
+          sed -i 's|${DB_SOURCE}|${{ secrets.DB_SOURCE }}|g' app.env
+          sed -i 's|${TOKEN_SYMMETRIC_KEY}|${{ secrets.TOKEN_SYMMETRIC_KEY }}|g' app.env
       
       # https://github.com/marketplace/actions/amazon-ecr-login-action-for-github-actions 
       - name: Configure AWS credentials
