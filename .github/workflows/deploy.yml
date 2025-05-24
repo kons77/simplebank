@@ -19,6 +19,9 @@ jobs:
       TOKEN_SYMMETRIC_KEY: ${{ secrets.TOKEN_SYMMETRIC_KEY }}
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
       # https://github.com/marketplace/actions/amazon-ecr-login-action-for-github-actions 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -41,6 +44,7 @@ jobs:
           REPOSITORY: simplebank
           IMAGE_TAG: ${{ github.sha }}
         run: |
+          ls -la
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
       
