@@ -11,6 +11,7 @@ db-data/
 .env.*
 !.env.example
 !.env.template
+secret.json
 Makefile
 
 # Binaries for programs and plugins
