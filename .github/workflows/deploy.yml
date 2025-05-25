@@ -13,20 +13,10 @@ jobs:
   build:
     name: Build image
     runs-on: ubuntu-latest
-    
-    env:
-      DB_SOURCE: ${{ secrets.DB_SOURCE }}
-      TOKEN_SYMMETRIC_KEY: ${{ secrets.TOKEN_SYMMETRIC_KEY }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Setup configuration file
-        run: |
-          cp app.env.template app.env
-          sed -i 's|${DB_SOURCE}|${{ secrets.DB_SOURCE }}|g' app.env
-          sed -i 's|${TOKEN_SYMMETRIC_KEY}|${{ secrets.TOKEN_SYMMETRIC_KEY }}|g' app.env
       
       # https://github.com/marketplace/actions/amazon-ecr-login-action-for-github-actions 
       - name: Configure AWS credentials
@@ -39,6 +29,20 @@ jobs:
           # https://github.com/aws-actions/configure-aws-credentials#assuming-a-role  
           role-to-assume: arn:aws:iam::327784329477:role/simplebank-github-ci
           aws-region: eu-north-1
+
+      - name: Fetch secrets from AWS Secrets Manager
+        id: fetch_secrets
+        run: |
+          aws secretsmanager get-secret-value \
+            --secret-id simplebank \
+            --region eu-north-1 \
+            --query SecretString \
+            --output text > secret.json
+          
+          cat secret.json | jq -r 'to_entries[] | "\(.key)=\(.value)"' > app.env
+
+      - name: Show generated .env file
+        run: cat app.env
 
       - name: Login to Amazon ECR
         id: login-ecr
