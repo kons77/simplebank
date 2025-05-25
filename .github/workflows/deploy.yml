@@ -38,8 +38,13 @@ jobs:
             --region eu-north-1 \
             --query SecretString \
             --output text > secret.json
-          
-          cat secret.json | jq -r 'to_entries[] | "\(.key)=\(.value)"' > app.env
+
+          export $(cat secret.json | jq -r 'to_entries | map("\(.key)=\(.value)") | .[]')
+
+          cp app.env.template app.env
+
+          sed -i "s|\\\${DB_SOURCE}|$DB_SOURCE|g" app.env
+          sed -i "s|\\\${TOKEN_SYMMETRIC_KEY}|$TOKEN_SYMMETRIC_KEY|g" app.env
 
       - name: Show generated .env file
         run: cat app.env

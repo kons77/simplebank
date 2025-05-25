@@ -23,7 +23,7 @@ db-data/
 *.env
 !.env.example
 !.env.template
-# app.env
+! app.env
 secret.json
 
 # Ignore editor config files
