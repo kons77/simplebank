@@ -25,6 +25,9 @@ migratedown:
 migratedown1: 
 	migrate -path db/migration -database "${DB_SOURCE}" -verbose down 1
 
+#migratecreate:
+#	migrate create -ext sql -dir db/migration -seq <migration_name>
+
 sqlc:
 	sqlc generate
 
