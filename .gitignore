@@ -42,3 +42,47 @@ logs/
 # OS-specific files
 .DS_Store
 Thumbs.db
+=======
+# migrate pre-compiled binary
+migrate*
+
+# docker volumes / DB data
+db-data/
+*.db
+
+# Ignore environment files
+*.env
+.env
+.env.*
+!.env.example
+!.env.template
+Makefile
+
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Go workspace file (Go 1.18+)
+go.work
+go.work.sum
+
+# IDE / Editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
