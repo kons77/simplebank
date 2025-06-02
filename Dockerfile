@@ -10,13 +10,13 @@ RUN curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.3/
 FROM alpine:3.21
 WORKDIR /app
 COPY --from=builder /app/main .
-COPY --from=builder app/migrate ./db/migrate
+COPY --from=builder app/migrate ./migrate
 COPY app.env .
 COPY start.sh .
 COPY wait-for.sh .
 RUN chmod +x start.sh
 RUN chmod +x wait-for.sh
-COPY db/migration ./migration
+COPY db/migration ./db/migration
 
 # which port are intented to be published 
 EXPOSE 8080
