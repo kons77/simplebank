@@ -7,6 +7,9 @@ postgres:
 postgres2: 
 	docker run --name pg-simplebank --network bank-network -p 5438:5432 -e POSTGRES_PASSWORD=secret -d postgres
 
+inspectdockerapi:
+	docker run -it --rm simplebank-api /bin/sh
+
 createdb:
 	docker exec -it pg-simplebank createdb --username=postgres --owner=postgres simplebank 
 

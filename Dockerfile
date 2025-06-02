@@ -1,5 +1,6 @@
 # Build stage 
 FROM golang:1.24.3-alpine3.21 AS builder 
+# set working directory . as /app 
 WORKDIR /app
 COPY . .
 RUN go build -o main main.go
@@ -8,6 +9,7 @@ RUN curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.3/
 
 # Run stage 
 FROM alpine:3.21
+# set working directory . as /app 
 WORKDIR /app
 COPY --from=builder /app/main .
 COPY --from=builder /app/migrate ./migrate
