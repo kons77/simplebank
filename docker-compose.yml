@@ -1,7 +1,7 @@
 services:
   postgres_simplebank:
     image: postgres:14-alpine
-    container_name: pg-simplbank
+    container_name: pg-simplebank
     restart: unless-stopped
     environment:
       - POSTGRES_USER=postgres
