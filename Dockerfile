@@ -16,7 +16,7 @@ COPY start.sh .
 COPY wait-for.sh .
 RUN chmod +x start.sh
 RUN chmod +x wait-for.sh
-COPY db/migration ./db/migration
+COPY db/migration ./migration
 
 # which port are intented to be published 
 EXPOSE 8080
