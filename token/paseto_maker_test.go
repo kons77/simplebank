@@ -21,11 +21,12 @@ func TestPasetoMaker(t *testing.T) {
 	issuedAt := time.Now()
 	expiredAt := issuedAt.Add(duration)
 
-	token, err := maker.CreateToken(username, duration)
+	token, payload, err := maker.CreateToken(username, duration)
 	require.NoError(t, err)
 	require.NotEmpty(t, token)
+	require.NotEmpty(t, payload)
 
-	payload, err := maker.VerifyToken(token)
+	payload, err = maker.VerifyToken(token)
 	require.NoError(t, err)
 	require.NotEmpty(t, payload)
 
@@ -42,11 +43,12 @@ func TestExpiredPasetoToken(t *testing.T) {
 	maker, err := NewPasetoMaker(key, nil)
 	require.NoError(t, err)
 
-	token, err := maker.CreateToken(util.RandomUsername(), -time.Minute)
+	token, payload, err := maker.CreateToken(util.RandomUsername(), -time.Minute)
 	require.NoError(t, err)
 	require.NotEmpty(t, token)
+	require.NotEmpty(t, payload)
 
-	payload, err := maker.VerifyToken(token)
+	payload, err = maker.VerifyToken(token)
 	require.Error(t, err)
 	require.EqualError(t, err, ErrExpiredToken.Error())
 	require.Nil(t, payload)
@@ -65,13 +67,14 @@ func TestInvalidToken(t *testing.T) {
 	maker, err := NewPasetoMaker(key, nil)
 	require.NoError(t, err)
 
-	token, err := maker.CreateToken(util.RandomUsername(), -time.Minute)
+	token, payload, err := maker.CreateToken(util.RandomUsername(), -time.Minute)
 	require.NoError(t, err)
 	require.NotEmpty(t, token)
+	require.NotEmpty(t, payload)
 
 	token += "aa"
 
-	payload, err := maker.VerifyToken(token)
+	payload, err = maker.VerifyToken(token)
 	require.Error(t, err)
 	require.EqualError(t, err, ErrInvalidToken.Error())
 	require.Nil(t, payload)
@@ -86,10 +89,10 @@ func TestWrongKey(t *testing.T) {
 	maker2, err := NewPasetoMaker(key2, nil)
 	require.NoError(t, err)
 
-	token, err := maker1.CreateToken(util.RandomUsername(), time.Minute)
+	token, payload, err := maker1.CreateToken(util.RandomUsername(), time.Minute)
 	require.NoError(t, err)
 
-	payload, err := maker2.VerifyToken(token)
+	payload, err = maker2.VerifyToken(token)
 	require.Error(t, err)
 	require.EqualError(t, err, ErrInvalidToken.Error())
 	require.Nil(t, payload)
