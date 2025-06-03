@@ -62,5 +62,11 @@ actlog:
 		-s TOKEN_SYMMETRIC_KEY=12345678123456781234567812345678 \
 		| tee logs/ci-act-$(shell date +"%Y%m%d-%H%M%S").log
 
+db_docs:
+	dbdocs build doc/db.dbml
+
+db_schema:
+	dbml2sql --postgres -o doc/schema.sql doc/db.dbml 
+
 .PHONY: postgres createdb dropdb migrateup migratedown migrateup1 migratedown1 \
-	sqlc test server testall mock actcheck actlog
+	sqlc test server testall mock actcheck actlog db_docs db_schema
