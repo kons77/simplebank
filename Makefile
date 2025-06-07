@@ -48,6 +48,11 @@ server:
 mock: 
 	mockgen -package mockdb -destination db/mock/store.go github.com/kons77/simplebank/db/sqlc Store 
 
+proto:
+	protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative \
+    --go-grpc_out=pb --go-grpc_opt=paths=source_relative \
+    proto/*.proto
+
 # run github actions locally using act, docker required
 actcheck:
 	act workflow_dispatch -W .github/act-only/ci-test-local.yml \
@@ -69,4 +74,4 @@ db_schema:
 	dbml2sql --postgres -o doc/schema.sql doc/db.dbml 
 
 .PHONY: postgres createdb dropdb migrateup migratedown migrateup1 migratedown1 \
-	sqlc test server testall mock actcheck actlog db_docs db_schema
+	sqlc test server testall mock actcheck actlog db_docs db_schema proto
