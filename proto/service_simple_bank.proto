@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package pb;
+
+import "rpc_create_user.proto";
+import "rpc_login_user.proto";
+
+// tell protoc which Go package to generate code for
+option go_package = "github.com/kons77/simplebank/pb";
+
+service SimpleBank {
+    rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {}
+    rpc LoginUser (LoginUserRequest) returns (LoginUserResponse) {}
+}
