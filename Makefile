@@ -54,6 +54,9 @@ proto:
     --go-grpc_out=pb --go-grpc_opt=paths=source_relative \
     proto/*.proto
 
+evans:
+	evans -r --host localhost --port 9090 repl
+
 # run github actions locally using act, docker required
 actcheck:
 	act workflow_dispatch -W .github/act-only/ci-test-local.yml \
@@ -75,4 +78,4 @@ db_schema:
 	dbml2sql --postgres -o doc/schema.sql doc/db.dbml 
 
 .PHONY: postgres createdb dropdb migrateup migratedown migrateup1 migratedown1 \
-	sqlc test server testall mock actcheck actlog db_docs db_schema proto
+	sqlc test server testall mock actcheck actlog db_docs db_schema proto evans
