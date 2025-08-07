@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"embed"
+	"io/fs"
 	"log"
 	"net"
 	"net/http"
@@ -19,8 +21,12 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
+//go:embed doc/**
+var embeddedFiles embed.FS
+
 func main() {
 
+	// load application configuration from the current directory
 	config, err := util.LoadConfig(".")
 	if err != nil {
 		log.Fatal("cannot load config:", err)
@@ -28,13 +34,24 @@ func main() {
 
 	dbSource := config.DBSource
 
+	// create a new PostgreSQL connection pool using pgx driver
+	// connection pools manage multiple database connections efficiently
+	// and handle connection reuse, timeouts, and limits
 	connPool, err := pgxpool.New(context.Background(), dbSource)
 	if err != nil {
 		log.Fatal("cannot connect to db", err)
 	}
 
+	// initialize the database store with the connection pool
+	// this store likely contains methods for database operations (CRUD)
 	store := db.NewStore(connPool)
+
+	// start the gateway server in a separate goroutine (non-blocking)
+	// this allows both servers to run concurrently
 	go runGatewayServer(config, store)
+
+	// start the gRPC server on the main goroutine (blocking)
+	// this keeps the main function alive and handles gRPC requests
 	runGrpcServer(config, store)
 
 }
@@ -92,8 +109,13 @@ func runGatewayServer(config util.Config, store *db.SQLStore) {
 	mux.Handle("/", grpcMux)
 
 	// start fileserver with swagger documentation
-	fs := http.FileServer(http.Dir("./doc/swagger"))
-	mux.Handle("/swagger/", http.StripPrefix("/swagger/", fs))
+	// --- fs := http.FileServer(http.Dir("./doc/swagger"))
+	swaggerFS, err := fs.Sub(embeddedFiles, "doc/swagger")
+	if err != nil {
+		log.Fatal("failed to get embedded swagger folder:", err)
+	}
+
+	mux.Handle("/swagger/", http.StripPrefix("/swagger/", http.FileServer(http.FS(swaggerFS))))
 
 	listener, err := net.Listen("tcp", config.HTTPServerAddress)
 	if err != nil {
@@ -107,7 +129,7 @@ func runGatewayServer(config util.Config, store *db.SQLStore) {
 	}
 }
 
-// start gin server
+// start gin server -- legacy, for example
 func runGinServer(config util.Config, store *db.SQLStore) {
 
 	server, err := api.NewServer(config, store)
